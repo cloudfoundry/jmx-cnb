@@ -1,0 +1,17 @@
+---
+platform: linux
+
+image_resource:
+  type: docker-image
+  source:
+    repository: golang
+    tag: latest
+
+inputs:
+- name: jmx-buildpack
+
+caches:
+- path: go-module-cache
+
+run:
+  path: jmx-buildpack/ci/unit-test.sh
