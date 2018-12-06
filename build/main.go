@@ -47,6 +47,8 @@ func b(build buildPkg.Build) (int, error) {
 		if err := d.Contribute(); err != nil {
 			return build.Failure(103), err
 		}
+
+		return build.Success(buildplan.BuildPlan{jmx.Dependency: buildplan.Dependency{}})
 	}
 
 	return build.Success(buildplan.BuildPlan{})
