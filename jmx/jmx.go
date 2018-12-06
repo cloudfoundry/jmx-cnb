@@ -47,7 +47,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
   -Dcom.sun.management.jmxremote.port=${PORT} \
   -Dcom.sun.management.jmxremote.rmi.port=${PORT}"
 `)
-	}, layers.Cache, layers.Launch)
+	}, layers.Launch)
 }
 
 // String makes JMX satisfy the Stringer interface.

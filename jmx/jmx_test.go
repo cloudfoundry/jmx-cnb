@@ -61,7 +61,7 @@ func testJMX(t *testing.T, when spec.G, it spec.S) {
 		}
 
 		layer := f.Build.Layers.Layer("jmx")
-		test.BeLayerLike(t, layer, false, true, true)
+		test.BeLayerLike(t, layer, false, false, true)
 		test.BeProfileLike(t, layer, "jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}"
