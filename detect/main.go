@@ -23,11 +23,11 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jmx-buildpack/jmx"
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
-	detectPkg "github.com/cloudfoundry/libcfbuildpack/detect"
+	"github.com/cloudfoundry/libcfbuildpack/detect"
 )
 
 func main() {
-	detect, err := detectPkg.DefaultDetect()
+	detect, err := detect.DefaultDetect()
 	if err != nil {
 		_, _ = fmt.Fprintf(os.Stderr, "Failed to initialize Detect: %s\n", err)
 		os.Exit(101)
@@ -46,12 +46,11 @@ func main() {
 	}
 }
 
-func d(detect detectPkg.Detect) (int, error) {
-	_, j := detect.BuildPlan[jvmapplication.Dependency]
+func d(detect detect.Detect) (int, error) {
+	_, dep := detect.BuildPlan[jvmapplication.Dependency]
+	_, env := os.LookupEnv("BP_JMX")
 
-	d := detect.Platform.Envs.Contains("BP_JMX")
-
-	if j && d {
+	if dep && env {
 		return detect.Pass(buildplan.BuildPlan{jmx.Dependency: buildplan.Dependency{}})
 	}
 

@@ -24,60 +24,42 @@ import (
 	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestDetect(t *testing.T) {
-	spec.Run(t, "Detect", testDetect, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "Detect", func(t *testing.T, _ spec.G, it spec.S) {
 
-func testDetect(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("fails without jvm-application", func() {
-		f := test.NewDetectFactory(t)
-		f.AddEnv(t, "BP_JMX", "")
+		var f *test.DetectFactory
 
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exitStatus != detect.FailStatusCode {
-			t.Errorf("os.Exit = %d, expected 100", exitStatus)
-		}
-	})
-
-	it("fails without BP_JMX", func() {
-		f := test.NewDetectFactory(t)
-		f.AddBuildPlan(t, jvmapplication.Dependency, buildplan.Dependency{})
-
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exitStatus != detect.FailStatusCode {
-			t.Errorf("os.Exit = %d, expected 100", exitStatus)
-		}
-	})
-
-	it("passes with jvm-application and BP_JMX", func() {
-		f := test.NewDetectFactory(t)
-		f.AddEnv(t, "BP_JMX", "")
-		f.AddBuildPlan(t, jvmapplication.Dependency, buildplan.Dependency{})
-
-		exitStatus, err := d(f.Detect)
-		if err != nil {
-			t.Fatal(err)
-		}
-
-		if exitStatus != detect.PassStatusCode {
-			t.Errorf("os.Exit = %d, expected 0", exitStatus)
-		}
-
-		test.BeBuildPlanLike(t, f.Output, buildplan.BuildPlan{
-			jmx.Dependency: buildplan.Dependency{},
+		it.Before(func() {
+			f = test.NewDetectFactory(t)
 		})
-	})
+
+		it("fails without jvm-application", func() {
+			defer test.ReplaceEnv(t, "BP_JMX", "")()
+
+			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
+		})
+
+		it("fails without BP_JMX", func() {
+			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
+
+			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
+		})
+
+		it("passes with jvm-application and BP_JMX", func() {
+			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
+			defer test.ReplaceEnv(t, "BP_JMX", "")()
+
+			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
+			g.Expect(f.Output).To(Equal(buildplan.BuildPlan{
+				jmx.Dependency: buildplan.Dependency{},
+			}))
+		})
+	}, spec.Report(report.Terminal{}))
 }

@@ -21,7 +21,6 @@ import (
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
-	"github.com/cloudfoundry/libcfbuildpack/logger"
 )
 
 // Dependency indicates that a JVM application should be run with JMX enabled.
@@ -29,8 +28,7 @@ const Dependency = "jmx"
 
 // JMX represents the JMX configuration for a JVM application.
 type JMX struct {
-	layer  layers.Layer
-	logger logger.Logger
+	layer layers.Layer
 }
 
 // Contribute makes the contribution to launch.
@@ -52,7 +50,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
 
 // String makes JMX satisfy the Stringer interface.
 func (j JMX) String() string {
-	return fmt.Sprintf("JMX{ layer: %s, logger: %s }", j.layer, j.logger)
+	return fmt.Sprintf("JMX{ layer: %s }", j.layer)
 }
 
 // NewJMX creates a new JMX instance. OK is true if build plan contains "jmx" dependency, otherwise false.
@@ -62,7 +60,7 @@ func NewJMX(build build.Build) (JMX, bool) {
 		return JMX{}, false
 	}
 
-	return JMX{build.Layers.Layer(Dependency), build.Logger}, true
+	return JMX{build.Layers.Layer(Dependency)}, true
 }
 
 type marker struct {
