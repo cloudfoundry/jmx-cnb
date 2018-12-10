@@ -22,47 +22,43 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jmx-buildpack/jmx"
 	"github.com/cloudfoundry/libcfbuildpack/test"
+	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
 
 func TestJMX(t *testing.T) {
-	spec.Run(t, "JMX", testJMX, spec.Report(report.Terminal{}))
-}
+	spec.Run(t, "JMX", func(t *testing.T, _ spec.G, it spec.S) {
 
-func testJMX(t *testing.T, when spec.G, it spec.S) {
+		g := NewGomegaWithT(t)
 
-	it("returns true if build plan does exist", func() {
-		f := test.NewBuildFactory(t)
-		f.AddBuildPlan(t, jmx.Dependency, buildplan.Dependency{})
+		var f *test.BuildFactory
 
-		_, ok := jmx.NewJMX(f.Build)
-		if !ok {
-			t.Errorf("NewJMX = %t, expected true", ok)
-		}
-	})
+		it.Before(func() {
+			f = test.NewBuildFactory(t)
+		})
 
-	it("returns false if build plan does not exist", func() {
-		f := test.NewBuildFactory(t)
+		it("returns true if build plan does exist", func() {
+			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
 
-		_, ok := jmx.NewJMX(f.Build)
-		if ok {
-			t.Errorf("NewJMX = %t, expected false", ok)
-		}
-	})
+			_, ok := jmx.NewJMX(f.Build)
+			g.Expect(ok).To(BeTrue())
+		})
 
-	it("contributes JMX configuration", func() {
-		f := test.NewBuildFactory(t)
-		f.AddBuildPlan(t, jmx.Dependency, buildplan.Dependency{})
+		it("returns false if build plan does not exist", func() {
+			_, ok := jmx.NewJMX(f.Build)
+			g.Expect(ok).To(BeFalse())
+		})
 
-		d, _ := jmx.NewJMX(f.Build)
-		if err := d.Contribute(); err != nil {
-			t.Fatal(err)
-		}
+		it("contributes JMX configuration", func() {
+			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
 
-		layer := f.Build.Layers.Layer("jmx")
-		test.BeLayerLike(t, layer, false, false, true)
-		test.BeProfileLike(t, layer, "jmx", `PORT=${BPL_JMX_PORT:=5000}
+			d, _ := jmx.NewJMX(f.Build)
+			g.Expect(d.Contribute()).To(Succeed())
+
+			layer := f.Build.Layers.Layer("jmx")
+			g.Expect(layer).To(test.HaveLayerMetadata(false, false, true))
+			g.Expect(layer).To(test.HaveProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}"
 
@@ -72,6 +68,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
   -Dcom.sun.management.jmxremote.ssl=false \
   -Dcom.sun.management.jmxremote.port=${PORT} \
   -Dcom.sun.management.jmxremote.rmi.port=${PORT}"
-`)
-	})
+`))
+		})
+	}, spec.Report(report.Terminal{}))
 }
