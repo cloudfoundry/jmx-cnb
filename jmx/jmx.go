@@ -28,12 +28,13 @@ const Dependency = "jmx"
 
 // JMX represents the JMX configuration for a JVM application.
 type JMX struct {
-	layer layers.Layer
+	layer   layers.Layer
+	version string
 }
 
 // Contribute makes the contribution to launch.
 func (j JMX) Contribute() error {
-	return j.layer.Contribute(marker{true}, func(layer layers.Layer) error {
+	return j.layer.Contribute(marker{j.version}, func(layer layers.Layer) error {
 		return layer.WriteProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}"
@@ -50,7 +51,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
 
 // String makes JMX satisfy the Stringer interface.
 func (j JMX) String() string {
-	return fmt.Sprintf("JMX{ layer: %s }", j.layer)
+	return fmt.Sprintf("JMX{ layer: %s, version: %s }", j.layer, j.version)
 }
 
 // NewJMX creates a new JMX instance. OK is true if build plan contains "jmx" dependency, otherwise false.
@@ -60,13 +61,13 @@ func NewJMX(build build.Build) (JMX, bool) {
 		return JMX{}, false
 	}
 
-	return JMX{build.Layers.Layer(Dependency)}, true
+	return JMX{build.Layers.Layer(Dependency), build.Buildpack.Info.Version}, true
 }
 
 type marker struct {
-	Debug bool `toml:"jmx"`
+	Version string `toml:"version"`
 }
 
 func (m marker) Identity() (string, string) {
-	return "JMX", ""
+	return "JMX", m.Version
 }
