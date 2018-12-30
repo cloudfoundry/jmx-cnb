@@ -51,7 +51,7 @@ func d(detect detect.Detect) (int, error) {
 	_, env := os.LookupEnv("BP_JMX")
 
 	if dep && env {
-		return detect.Pass(buildplan.BuildPlan{jmx.Dependency: buildplan.Dependency{}})
+		return detect.Pass(buildplan.BuildPlan{jmx.Dependency: detect.BuildPlan[jmx.Dependency]})
 	}
 
 	return detect.Fail(), nil
