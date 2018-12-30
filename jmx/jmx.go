@@ -20,6 +20,7 @@ import (
 	"fmt"
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
+	"github.com/cloudfoundry/libcfbuildpack/buildpack"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
 )
 
@@ -28,13 +29,13 @@ const Dependency = "jmx"
 
 // JMX represents the JMX configuration for a JVM application.
 type JMX struct {
-	layer   layers.Layer
-	version string
+	info  buildpack.Info
+	layer layers.Layer
 }
 
 // Contribute makes the contribution to launch.
 func (j JMX) Contribute() error {
-	return j.layer.Contribute(marker{j.version}, func(layer layers.Layer) error {
+	return j.layer.Contribute(marker{j.info}, func(layer layers.Layer) error {
 		return layer.WriteProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}"
@@ -51,7 +52,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
 
 // String makes JMX satisfy the Stringer interface.
 func (j JMX) String() string {
-	return fmt.Sprintf("JMX{ layer: %s, version: %s }", j.layer, j.version)
+	return fmt.Sprintf("JMX{ info: %s, layer: %s }", j.info, j.layer)
 }
 
 // NewJMX creates a new JMX instance. OK is true if build plan contains "jmx" dependency, otherwise false.
@@ -61,11 +62,11 @@ func NewJMX(build build.Build) (JMX, bool) {
 		return JMX{}, false
 	}
 
-	return JMX{build.Layers.Layer(Dependency), build.Buildpack.Info.Version}, true
+	return JMX{build.Buildpack.Info, build.Layers.Layer(Dependency)}, true
 }
 
 type marker struct {
-	Version string `toml:"version"`
+	buildpack.Info
 }
 
 func (m marker) Identity() (string, string) {
