@@ -18,6 +18,7 @@ package jmx
 
 import (
 	"fmt"
+	"os"
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/buildpack"
@@ -36,6 +37,10 @@ type JMX struct {
 // Contribute makes the contribution to launch.
 func (j JMX) Contribute() error {
 	return j.layer.Contribute(marker{j.info}, func(layer layers.Layer) error {
+		if err := os.RemoveAll(layer.Root); err != nil {
+			return err
+		}
+
 		return layer.WriteProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}"
