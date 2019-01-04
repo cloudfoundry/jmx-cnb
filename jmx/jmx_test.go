@@ -60,9 +60,9 @@ func TestJMX(t *testing.T) {
 			g.Expect(layer).To(test.HaveLayerMetadata(false, false, true))
 			g.Expect(layer).To(test.HaveProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
-printf "JMX enabled on port ${PORT}"
+printf "JMX enabled on port ${PORT}\n"
 
-export JAVA_OPTS="${JAVA_OPTS} \ 
+export JAVA_OPTS="${JAVA_OPTS} \
   -Djava.rmi.server.hostname=127.0.0.1 \
   -Dcom.sun.management.jmxremote.authenticate=false \
   -Dcom.sun.management.jmxremote.ssl=false \
