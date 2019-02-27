@@ -18,7 +18,6 @@ package jmx
 
 import (
 	"fmt"
-	"os"
 
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/buildpack"
@@ -31,16 +30,12 @@ const Dependency = "jmx"
 // JMX represents the JMX configuration for a JVM application.
 type JMX struct {
 	info  buildpack.Info
-	layer layers.Layer
+	layer layers.HelperLayer
 }
 
 // Contribute makes the contribution to launch.
 func (j JMX) Contribute() error {
-	return j.layer.Contribute(marker{j.info}, func(layer layers.Layer) error {
-		if err := os.RemoveAll(layer.Root); err != nil {
-			return err
-		}
-
+	return j.layer.Contribute(func(artifact string, layer layers.HelperLayer) error {
 		return layer.WriteProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}\n"
@@ -67,13 +62,5 @@ func NewJMX(build build.Build) (JMX, bool) {
 		return JMX{}, false
 	}
 
-	return JMX{build.Buildpack.Info, build.Layers.Layer(Dependency)}, true
-}
-
-type marker struct {
-	buildpack.Info
-}
-
-func (m marker) Identity() (string, string) {
-	return "JMX", m.Version
+	return JMX{build.Buildpack.Info, build.Layers.HelperLayer(Dependency, "JMX")}, true
 }
