@@ -8,7 +8,7 @@ image_resource:
     tag: latest
 
 inputs:
-- name: jmx-buildpack
+- name: jmx-cnb
 
 outputs:
 - name: artifactory
@@ -17,4 +17,4 @@ caches:
 - path: go-module-cache
 
 run:
-  path: jmx-buildpack/ci/package.sh
+  path: jmx-cnb/ci/package.sh

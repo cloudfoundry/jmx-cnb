@@ -20,8 +20,8 @@ import (
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/jmx-buildpack/jmx"
-	"github.com/cloudfoundry/jvm-application-buildpack/jvmapplication"
+	"github.com/cloudfoundry/jmx-cnb/jmx"
+	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	. "github.com/onsi/gomega"

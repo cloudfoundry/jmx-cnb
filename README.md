@@ -1,4 +1,4 @@
-# `jmx-buildpack`
+# `jmx-cnb`
 The Cloud Foundry JMX Buildpack is a Cloud Native Buildpack V3 that enables the JMX in JVM applications.
 
 ## Detection

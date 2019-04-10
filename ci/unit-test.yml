@@ -8,10 +8,10 @@ image_resource:
     tag: latest
 
 inputs:
-- name: jmx-buildpack
+- name: jmx-cnb
 
 caches:
 - path: go-module-cache
 
 run:
-  path: jmx-buildpack/ci/unit-test.sh
+  path: jmx-cnb/ci/unit-test.sh

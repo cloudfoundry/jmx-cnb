@@ -20,7 +20,7 @@ import (
 	"testing"
 
 	"github.com/buildpack/libbuildpack/buildplan"
-	"github.com/cloudfoundry/jmx-buildpack/jmx"
+	"github.com/cloudfoundry/jmx-cnb/jmx"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	. "github.com/onsi/gomega"
 	"github.com/sclevine/spec"
