@@ -17,8 +17,6 @@
 package jmx
 
 import (
-	"fmt"
-
 	"github.com/cloudfoundry/libcfbuildpack/build"
 	"github.com/cloudfoundry/libcfbuildpack/buildpack"
 	"github.com/cloudfoundry/libcfbuildpack/layers"
@@ -48,11 +46,6 @@ export JAVA_OPTS="${JAVA_OPTS} \
   -Dcom.sun.management.jmxremote.rmi.port=${PORT}"
 `)
 	}, layers.Launch)
-}
-
-// String makes JMX satisfy the Stringer interface.
-func (j JMX) String() string {
-	return fmt.Sprintf("JMX{ info: %s, layer: %s }", j.info, j.layer)
 }
 
 // NewJMX creates a new JMX instance. OK is true if build plan contains "jmx" dependency, otherwise false.
