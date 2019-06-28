@@ -41,7 +41,7 @@ func main() {
 }
 
 func b(build build.Build) (int, error) {
-	build.Logger.FirstLine(build.Logger.PrettyIdentity(build.Buildpack))
+	build.Logger.Title(build.Buildpack)
 
 	if d, ok := jmx.NewJMX(build); ok {
 		if err := d.Contribute(); err != nil {
