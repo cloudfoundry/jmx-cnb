@@ -22,7 +22,7 @@ import (
 	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jmx-cnb/jmx"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -30,7 +30,7 @@ import (
 func TestJMX(t *testing.T) {
 	spec.Run(t, "JMX", func(t *testing.T, _ spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		var f *test.BuildFactory
 
@@ -42,19 +42,19 @@ func TestJMX(t *testing.T) {
 			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
 
 			_, ok := jmx.NewJMX(f.Build)
-			g.Expect(ok).To(BeTrue())
+			g.Expect(ok).To(gomega.BeTrue())
 		})
 
 		it("returns false if build plan does not exist", func() {
 			_, ok := jmx.NewJMX(f.Build)
-			g.Expect(ok).To(BeFalse())
+			g.Expect(ok).To(gomega.BeFalse())
 		})
 
 		it("contributes JMX configuration", func() {
 			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
 
 			d, _ := jmx.NewJMX(f.Build)
-			g.Expect(d.Contribute()).To(Succeed())
+			g.Expect(d.Contribute()).To(gomega.Succeed())
 
 			layer := f.Build.Layers.Layer("jmx")
 			g.Expect(layer).To(test.HaveLayerMetadata(false, false, true))

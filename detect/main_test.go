@@ -24,7 +24,7 @@ import (
 	"github.com/cloudfoundry/jvm-application-cnb/jvmapplication"
 	"github.com/cloudfoundry/libcfbuildpack/detect"
 	"github.com/cloudfoundry/libcfbuildpack/test"
-	. "github.com/onsi/gomega"
+	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
 	"github.com/sclevine/spec/report"
 )
@@ -32,7 +32,7 @@ import (
 func TestDetect(t *testing.T) {
 	spec.Run(t, "Detect", func(t *testing.T, _ spec.G, it spec.S) {
 
-		g := NewGomegaWithT(t)
+		g := gomega.NewWithT(t)
 
 		var f *test.DetectFactory
 
@@ -43,21 +43,21 @@ func TestDetect(t *testing.T) {
 		it("fails without jvm-application", func() {
 			defer test.ReplaceEnv(t, "BP_JMX", "")()
 
-			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.FailStatusCode))
 		})
 
 		it("fails without BP_JMX", func() {
 			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
 
-			g.Expect(d(f.Detect)).To(Equal(detect.FailStatusCode))
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.FailStatusCode))
 		})
 
 		it("passes with jvm-application and BP_JMX", func() {
 			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
 			defer test.ReplaceEnv(t, "BP_JMX", "")()
 
-			g.Expect(d(f.Detect)).To(Equal(detect.PassStatusCode))
-			g.Expect(f.Output).To(Equal(buildplan.BuildPlan{
+			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
+			g.Expect(f.Output).To(gomega.Equal(buildplan.BuildPlan{
 				jmx.Dependency: buildplan.Dependency{},
 			}))
 		})
