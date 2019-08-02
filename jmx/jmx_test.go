@@ -19,8 +19,8 @@ package jmx_test
 import (
 	"testing"
 
-	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jmx-cnb/jmx"
+	"github.com/cloudfoundry/libcfbuildpack/buildpackplan"
 	"github.com/cloudfoundry/libcfbuildpack/test"
 	"github.com/onsi/gomega"
 	"github.com/sclevine/spec"
@@ -39,7 +39,7 @@ func TestJMX(t *testing.T) {
 		})
 
 		it("returns true if build plan does exist", func() {
-			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: jmx.Dependency})
 
 			_, ok := jmx.NewJMX(f.Build)
 			g.Expect(ok).To(gomega.BeTrue())
@@ -51,7 +51,7 @@ func TestJMX(t *testing.T) {
 		})
 
 		it("contributes JMX configuration", func() {
-			f.AddBuildPlan(jmx.Dependency, buildplan.Dependency{})
+			f.AddPlan(buildpackplan.Plan{Name: jmx.Dependency})
 
 			d, _ := jmx.NewJMX(f.Build)
 			g.Expect(d.Contribute()).To(gomega.Succeed())

@@ -50,8 +50,7 @@ export JAVA_OPTS="${JAVA_OPTS} \
 
 // NewJMX creates a new JMX instance. OK is true if build plan contains "jmx" dependency, otherwise false.
 func NewJMX(build build.Build) (JMX, bool) {
-	_, ok := build.BuildPlan[Dependency]
-	if !ok {
+	if !build.Plans.Has(Dependency) {
 		return JMX{}, false
 	}
 
