@@ -40,25 +40,24 @@ func TestDetect(t *testing.T) {
 			f = test.NewDetectFactory(t)
 		})
 
-		it("fails without jvm-application", func() {
-			defer test.ReplaceEnv(t, "BP_JMX", "")()
-
-			g.Expect(d(f.Detect)).To(gomega.Equal(detect.FailStatusCode))
-		})
-
 		it("fails without BP_JMX", func() {
-			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
-
 			g.Expect(d(f.Detect)).To(gomega.Equal(detect.FailStatusCode))
 		})
 
 		it("passes with jvm-application and BP_JMX", func() {
-			f.AddBuildPlan(jvmapplication.Dependency, buildplan.Dependency{})
 			defer test.ReplaceEnv(t, "BP_JMX", "")()
 
 			g.Expect(d(f.Detect)).To(gomega.Equal(detect.PassStatusCode))
-			g.Expect(f.Output).To(gomega.Equal(buildplan.BuildPlan{
-				jmx.Dependency: buildplan.Dependency{},
+			g.Expect(f.Plans).To(gomega.Equal(buildplan.Plans{
+				Plan: buildplan.Plan{
+					Provides: []buildplan.Provided{
+						{Name: jmx.Dependency},
+					},
+					Requires: []buildplan.Required{
+						{Name: jmx.Dependency},
+						{Name: jvmapplication.Dependency},
+					},
+				},
 			}))
 		})
 	}, spec.Report(report.Terminal{}))

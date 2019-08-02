@@ -20,7 +20,6 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/buildpack/libbuildpack/buildplan"
 	"github.com/cloudfoundry/jmx-cnb/jmx"
 	"github.com/cloudfoundry/libcfbuildpack/build"
 )
@@ -47,9 +46,7 @@ func b(build build.Build) (int, error) {
 		if err := d.Contribute(); err != nil {
 			return build.Failure(103), err
 		}
-
-		return build.Success(buildplan.BuildPlan{jmx.Dependency: buildplan.Dependency{}})
 	}
 
-	return build.Success(buildplan.BuildPlan{})
+	return build.Success()
 }
