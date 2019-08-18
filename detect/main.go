@@ -43,7 +43,6 @@ func main() {
 
 func d(detect detect.Detect) (int, error) {
 	_, env := os.LookupEnv("BP_JMX")
-
 	if !env {
 		return detect.Fail(), nil
 	}
