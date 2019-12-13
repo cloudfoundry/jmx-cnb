@@ -3,7 +3,7 @@ module github.com/cloudfoundry/jmx-cnb
 go 1.13
 
 require (
-	github.com/buildpack/libbuildpack v1.25.5
+	github.com/buildpack/libbuildpack v1.25.6
 	github.com/cloudfoundry/jvm-application-cnb v1.0.88
 	github.com/cloudfoundry/libcfbuildpack v1.91.8
 	github.com/onsi/gomega v1.7.1
