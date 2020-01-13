@@ -13,7 +13,8 @@ The buildpack will do the following:
 ## Configuration 
 | Environment Variable | Description
 | -------------------- | -----------
-| `BPL_JMX_PORT` | What port the JVM should expose JMX on. Defaults to `5000`. 
+| `$BP_JMX` | Whether to contribute JMX support
+| `$BPL_JMX_PORT` | What port the JMX connector will listen on. Defaults to `5000`. 
 
 ## Creating SSH Tunnel
 After starting an application with JMX enabled, an SSH tunnel must be created to the container.  To create that SSH container, execute the following command:
