@@ -8,7 +8,7 @@ This buildpack will participate if all of the following conditions are met
 
 The buildpack will do the following:
 
-* Contribute JMX configuration to `JAVA_OPTS` 
+* Contribute JMX configuration to `$JAVA_OPTS` 
 
 ## Configuration 
 | Environment Variable | Description
