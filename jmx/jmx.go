@@ -34,6 +34,8 @@ type JMX struct {
 // Contribute makes the contribution to launch.
 func (j JMX) Contribute() error {
 	return j.layer.Contribute(func(artifact string, layer layers.HelperLayer) error {
+		layer.Logger.LaunchConfiguration("Set $BPL_JMX_PORT to configure", "5000");
+
 		return layer.WriteProfile("jmx", `PORT=${BPL_JMX_PORT:=5000}
 
 printf "JMX enabled on port ${PORT}\n"

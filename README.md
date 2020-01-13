@@ -1,18 +1,19 @@
 # `jmx-cnb`
 The Cloud Foundry JMX Buildpack is a Cloud Native Buildpack V3 that enables the JMX in JVM applications.
 
-## Detection
-The detection phase passes if
+## Behavior
+This buildpack will participate if all of the following conditions are met
 
-* `$BP_JMX` exists and build plan contains `jvm-application`
-  * Contributes `jmx` to the build plan
+* `$BP_JMX` is set
 
-## Build
-If the build plan contains
+The buildpack will do the following:
 
-* `jmx`
-  * Contributes JMX configuration to `$JAVA_OPTS`
-  * If `$BPL_JMX_PORT` is specified, configures the port JMX  will listen on.  Defaults to `5000`.
+* Contribute JMX configuration to `JAVA_OPTS` 
+
+## Configuration 
+| Environment Variable | Description
+| -------------------- | -----------
+| `BPL_JMX_PORT` | What port the JVM should expose JMX on. Defaults to `5000`. 
 
 ## Creating SSH Tunnel
 After starting an application with JMX enabled, an SSH tunnel must be created to the container.  To create that SSH container, execute the following command:
