@@ -20,9 +20,9 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/buildpack/libbuildpack/buildplan"
+	"github.com/buildpacks/libbuildpack/v2/buildplan"
 	"github.com/cloudfoundry/jmx-cnb/jmx"
-	"github.com/cloudfoundry/libcfbuildpack/detect"
+	"github.com/cloudfoundry/libcfbuildpack/v2/detect"
 )
 
 func main() {
